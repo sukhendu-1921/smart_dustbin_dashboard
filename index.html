@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Dustbin | Municipality Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">♻</div>
+        <div><h2>Smart Dustbin</h2><p>Municipality Dashboard</p></div>
+      </div>
+
+      <div class="network-box">
+        <p class="eyebrow">LIVE NETWORK</p>
+        <h2><span id="network-total">12</span> bins</h2>
+        <p class="live-status"><span class="live-dot"></span><span id="simulation-label">Simulation running</span></p>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-page="Overview">▦ <span>Overview</span></button>
+        <button class="nav-link" data-page="Bins">▤ <span>Bins</span></button>
+        <button class="nav-link" data-page="Alerts">♧ <span>Alerts</span><b id="alert-count">2</b></button>
+        <button class="nav-link" data-page="Routes">⌁ <span>Routes</span></button>
+        <button class="nav-link" data-page="Analytics">▥ <span>Analytics</span></button>
+      </nav>
+
+      <div class="city-card">
+        <p class="eyebrow">CITY OPERATIONS</p>
+        <h3>Kolkata — Park Street</h3>
+        <p>22.5523, 88.3512 · 4 teams on shift</p>
+        <p class="city-name">Kolkata Municipal Corporation</p>
+      </div>
+      <div class="sidebar-bottom">SMART CITY · CLEAN CITY</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-icon">♻</span><strong>Smart Dustbin</strong></div>
+        <div class="page-heading">
+          <h1 id="page-title">Smart Dustbin Dashboard</h1>
+          <p>Monitor bins, manage collections and keep the city clean.</p>
+        </div>
+        <div class="top-actions">
+          <select id="city-select" aria-label="Select city">
+            <option>Kolkata</option><option>Howrah</option><option>Salt Lake</option><option>New Town</option>
+          </select>
+          <span class="time-chip">● <span id="clock">--:--:--</span></span>
+          <span class="date-chip"><span id="date">-- --- ----</span></span>
+        </div>
+      </header>
+
+      <section class="page-section active" id="page-Overview">
+        <div class="welcome-row">
+          <div><h2>City overview</h2><p>Here is what is happening across your smart bin network.</p></div>
+          <button class="button primary" data-open-add>＋ Add New Bin</button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon green">▤</div><p>Total Bins</p><h2 id="stat-total">12</h2><small>Across 5 zones</small></article>
+          <article class="stat-card"><div class="stat-icon red">♧</div><p>Full Bins</p><h2 id="stat-full">4</h2><small>More than 80% fill</small></article>
+          <article class="stat-card"><div class="stat-icon amber">◒</div><p>Half-Full</p><h2 id="stat-half">5</h2><small>50–80% fill</small></article>
+          <article class="stat-card"><div class="stat-icon green">♧</div><p>Empty / Low</p><h2 id="stat-empty">3</h2><small>Below 50% fill</small></article>
+          <article class="stat-card"><div class="stat-icon blue">％</div><p>Avg Fill %</p><h2 id="stat-average">62%</h2><small>City-wide load</small></article>
+          <article class="stat-card"><div class="stat-icon purple">✓</div><p>Collections Today</p><h2 id="stat-pickups">18</h2><small>Completed pickups</small></article>
+          <article class="stat-card"><div class="stat-icon red">⚑</div><p>Overdue Alerts</p><h2 id="stat-overdue">2</h2><small>Need acknowledgement</small></article>
+        </div>
+
+        <div class="content-grid overview-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Bin Fill Levels</h3><p>Current fill percentage of each bin</p></div><button class="text-button" data-go="Bins">View all →</button></div>
+            <div id="overview-bins" class="fill-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Recent Alerts</h3><p>Bins that need attention</p></div><button class="text-button" data-go="Alerts">View all →</button></div>
+            <div id="overview-alerts" class="alert-list"></div>
+          </article>
+        </div>
+        <div class="panel note-panel"><div class="note-icon">i</div><div><strong>Project demonstration mode</strong><p>This dashboard uses sample Kolkata bin data. The live simulation changes demo readings automatically; it is not connected to a physical IoT device.</p></div></div>
+      </section>
+
+      <section class="page-section" id="page-Bins">
+        <div class="welcome-row">
+          <div><h2>Manage smart bins</h2><p>Search, filter and manage all dustbins in the network.</p></div>
+          <button class="button primary" id="show-add-form">＋ Add Bin</button>
+        </div>
+        <div class="panel filter-panel">
+          <div class="filter-grid">
+            <label>Search bin or location<input id="search-input" type="search" placeholder="Search by bin ID or location..."></label>
+            <label>Zone<select id="zone-filter"><option>All zones</option><option>North</option><option>South</option><option>Central</option><option>East</option><option>West</option></select></label>
+            <label>Waste type<select id="waste-filter"><option>All waste</option><option>Organic</option><option>Plastic</option><option>Paper</option><option>Glass</option><option>E-waste</option></select></label>
+            <label>Status<select id="status-filter"><option>All status</option><option>Full</option><option>Half-Full</option><option>Empty</option></select></label>
+            <label>Sort by<select id="sort-filter"><option value="fill">Fill %</option><option value="location">Location</option><option value="lastPickup">Last pickup</option></select></label>
+          </div>
+          <div class="filter-actions"><button class="button secondary" id="sort-direction">↕ Descending</button><button class="button secondary" id="route-from-bins">⌁ Optimize Collection Route</button></div>
+        </div>
+        <div class="panel table-panel">
+          <div class="table-wrap"><table>
+            <thead><tr><th>Bin ID</th><th>Location</th><th>GPS lat / lng</th><th>Fill %</th><th>Status</th><th>Last pickup</th><th>Actions</th></tr></thead>
+            <tbody id="bins-table"></tbody>
+          </table></div>
+          <p class="table-foot" id="table-count">Showing 12 bins</p>
+        </div>
+        <div class="panel add-panel hidden" id="add-panel">
+          <div class="panel-heading"><div><h3>Add a new smart bin</h3><p>Enter the bin information below.</p></div><button class="close-button" id="close-add-form">×</button></div>
+          <form id="add-bin-form" class="form-grid">
+            <label>Bin ID<input name="id" placeholder="Example: BIN-13" required></label>
+            <label>Location<input name="location" placeholder="Enter location" required></label>
+            <label>Latitude<input name="lat" type="number" step="any" placeholder="22.5523" required></label>
+            <label>Longitude<input name="lng" type="number" step="any" placeholder="88.3512" required></label>
+            <label>Waste type<select name="waste"><option>Organic</option><option>Plastic</option><option>Paper</option><option>Glass</option><option>E-waste</option></select></label>
+            <label>Zone<select name="zone"><option>North</option><option>South</option><option>Central</option><option>East</option><option>West</option></select></label>
+            <div class="form-actions"><button class="button primary" type="submit">Save Bin</button><button class="button secondary" type="reset">Clear</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="page-section" id="page-Alerts">
+        <div class="welcome-row"><div><h2>Alerts & notifications</h2><p>High fill-level bins that may need collection.</p></div><button class="button secondary" id="simulate-alert">＋ Simulate Alert</button></div>
+        <div class="panel"><div class="panel-heading"><div><h3>Active alerts</h3><p>Review and acknowledge collection alerts.</p></div></div><div id="all-alerts" class="alert-list"></div></div>
+      </section>
+
+      <section class="page-section" id="page-Routes">
+        <div class="welcome-row"><div><h2>Collection routes</h2><p>Plan a route for bins that are more than 80% full.</p></div><button class="button primary" id="optimize-route">⌁ Optimize Route</button></div>
+        <div class="panel route-summary" id="route-summary"><div><span class="eyebrow">ROUTE STATUS</span><h2>Ready to optimize</h2><p>Generate a suggested collection route for full bins.</p></div><div class="route-metrics"><div><strong id="route-stops">0</strong><small>Stops</small></div><div><strong id="route-distance">0 km</strong><small>Estimated distance</small></div><div><strong id="route-time">0 min</strong><small>Estimated time</small></div></div></div>
+        <div class="panel"><div class="panel-heading"><div><h3>Suggested collection stops</h3><p>Full bins are listed in collection order.</p></div></div><ol id="route-list" class="route-list"><li class="empty-state">Click “Optimize Route” to generate a collection route.</li></ol></div>
+      </section>
+
+      <section class="page-section" id="page-Analytics">
+        <div class="welcome-row"><div><h2>Analytics & reports</h2><p>Understand waste levels and collection activity.</p></div><button class="button secondary" id="download-report">↓ Download CSV</button></div>
+        <div class="content-grid analytics-grid">
+          <article class="panel"><div class="panel-heading"><div><h3>Waste Composition</h3><p>Bins by dominant waste type</p></div></div><div class="chart-area"><div id="waste-donut" class="donut-chart"><div><strong id="waste-total">12</strong><small>Total bins</small></div></div><div id="waste-legend" class="legend"></div></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Collections per Day</h3><p>Pickups completed</p></div></div><div id="collection-chart" class="bar-chart"></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Fill Trend</h3><p>Average fill across the network</p></div></div><div id="trend-chart" class="trend-chart"></div></article>
+        </div>
+      </section>
+
+      <footer class="footer"><span>Smart Dustbin • Student innovation for cleaner Kolkata</span><span>Live simulation updates every 4 seconds • Demo data</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
